@@ -1,30 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TODO-工作管理系統-登入</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <style>
+        .ans-area {
+            display: flex;
+            width: 42px;
+            height: 42px;
+            justify-content: center;
+            align-items: center
+        }
+
+        #pics {
+            display: inline-block;
+        }
+
+        #captcha {
+            font-family: 'Arial';
+            font-size: 30px;
+            border: 1px solid gray;
+            width: 170px;
+            height: 44px;
+            display: flex;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container m-5 p-5 border">
-    <div>
-        <label for="acc">帳號：</label>
-        <input type="text" name="acc" id="acc">
+    <div class="container m-5 p-5 border">
+        <div>
+            <label for="acc">帳號：</label>
+            <input type="text" name="acc" id="acc">
+        </div>
+        <div>
+            <label for="pw">密碼：</label>
+            <input type="password" name="pw" id="pw">
+        </div>
+        <div>
+            <label>驗證碼：</label>
+            <div id="pics"></div><button onclick="recaptcha()">重新產生</button>
+            <div id="captcha"></div>
+        </div>
+        <div>
+            <button onclick="login()">登入</button>
+        </div>
     </div>
-    <div>
-        <label for="pw">密碼：</label>
-        <input type="password" name="pw" id="pw">
-    </div>
-    <div>
-        <label>驗證碼：</label>
-        <div id="pics"></div>
-        <div id="ans"></div>
-
-    </div>
-    <div>
-
-    </div>
-</div>    
 </body>
+
 </html>
+<script>
+//頁面載入時取得驗證碼，並註冊互動事件
+recaptcha()
+
+//登入程式
+function login(){
+    let ans="";
+    $("#captcha img").each((idx,img)=>{
+        ans=ans+$(img).data('key')
+})
+    let input={
+        acc:$("#acc").val(),
+        pw:$("#pw").val(),
+        ans
+    }
+    console.log(input)
+    $.post("api/chk_login.php",input,(chk)=>{
+        chk=JSON.parse(chk)
+        if(chk.code=='111'){
+            location.href='index.php';
+        }else if(chk.errtimes<3){
+            alert(chk.msg+"\n"+"累積登入錯誤"+chk.errtimes+"次")
+            $("#acc,#pw").val("")
+            recaptcha()
+        }else{
+            alert(chk.msg+"\n"+"累積登入錯誤"+chk.errtimes+"次")
+            location.href="error.html";
+        }
+    })
+}
+
+//由server取得圖形驗證碼
+function recaptcha() {
+    $.getJSON("api/make_pic.php", (captcha) => {
+        $("#pics").html("")
+        $("#captcha").html("")
+        //將圖片放入圖片區
+        $.each(captcha.captcha, (key, pic) => {
+            $("#pics").append(`<img src='${pic}' data-key='${key}'  class='pic'>`)
+        })
+
+        //將答案放入答案區
+        captcha.ans.forEach(a => {
+            $("#captcha").append(`<span class='ans-area'>${a}</span>`)
+        })
+        //設定一個全域變數來傳遞當下被拖動的元素
+        let drag
+
+        $(".pic").on({
+            'dragstart': (e) => {
+                drag = e.target
+            }
+        })
+
+        $('.ans-area').on({
+            "drop": (e) => {
+                //在此區域放開滑鼠時，把變數drag的元素複製一份放在這個位置
+                $(e.currentTarget).html($(drag).clone())
+            },
+            'dragover': (e) => {
+                //取消dragover的預設事件才能啟用drop的效果
+                e.preventDefault();
+            }
+        })
+    })
+}
+
+</script>

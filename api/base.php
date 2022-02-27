@@ -149,4 +149,7 @@ function to($url){
     header("location:".$url);
 }
 
+$User=new DB("user")
+
+
 ?>
