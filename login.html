@@ -51,6 +51,7 @@
             <button onclick="login()">登入</button>
         </div>
     </div>
+    <script src="./js/bootstrap.js"></script>  
 </body>
 
 </html>
@@ -72,8 +73,13 @@ function login(){
     console.log(input)
     $.post("api/chk_login.php",input,(chk)=>{
         chk=JSON.parse(chk)
+        console.log(chk)
         if(chk.code=='111'){
-            location.href='index.php';
+            if(input.acc=='admin'){
+                location.href='admin.php';
+            }else{
+                location.href='index.php';
+            }
         }else if(chk.errtimes<3){
             alert(chk.msg+"\n"+"累積登入錯誤"+chk.errtimes+"次")
             $("#acc,#pw").val("")

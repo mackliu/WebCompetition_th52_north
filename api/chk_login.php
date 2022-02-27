@@ -38,12 +38,12 @@ if($chk_acc){
 
 if($code=='111'){
     $_SESSION['login']=$_POST['acc'];
-    unset($_SESSION['errtimes']);
+    
+    //如果登入成功，錯誤登入次數歸零
+    $_SESSION['errtimes']=0;
 }else{
-
     $_SESSION['errtimes']++;
 }
-
 
 echo json_encode(['code'=>$code,'msg'=>$msg,'errtimes'=>$_SESSION['errtimes']]);
 
