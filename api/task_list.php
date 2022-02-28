@@ -68,6 +68,7 @@ function delTask(id){
     if(chk===true){
         $.post("api/del_task.php",{id},()=>{
             loadTaskList()
+            loadTaskTable()
         })
     }
 

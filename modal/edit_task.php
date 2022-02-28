@@ -37,10 +37,10 @@ $task=$Task->find($_POST['id']);
         <label for="start" class="col-md-2 px-0">開始時間：</label>
           <select name="start" id="start" class="col-md-3">
           <?php
-            for($i=1;$i<=24;$i++){
+            for($i=0;$i<=24;$i++){
               $zero=sprintf("%02d",$i);
-              $selected=($task['start']==($zero.":00"))?'selected':'';
-              echo "<option value='$zero:00' $selected>$zero:00</option>";
+              $selected=($task['start']==$zero)?'selected':'';
+              echo "<option value='$zero' $selected>$zero:00</option>";
             }
           ?>
           </select>
@@ -48,10 +48,10 @@ $task=$Task->find($_POST['id']);
           <label for="end" class="col-md-2 px-0">結束時間：</label>
           <select name="end" id="end" class="col-md-3">
           <?php
-            for($i=1;$i<=24;$i++){
+            for($i=0;$i<=24;$i++){
               $zero=sprintf("%02d",$i);
-              $selected=($task['end']==($zero.":00"))?'selected':'';
-              echo "<option value='$zero:00' $selected>$zero:00</option>";
+              $selected=($task['end']==$zero)?'selected':'';
+              echo "<option value='$zero' $selected>$zero:00</option>";
             }
           ?>
           </select>
@@ -82,13 +82,12 @@ function submit(id){
     description:$("#description").val(),
   }
   $.post("api/edit_task.php",data,(res)=>{
-    console.log(res)
-      alert("工作修改完成");
       $("#editTask").modal("hide")
       $("#editTask").on("hidden.bs.modal",()=>{
         $("#editTask").modal("dispose")
         $("#modal").html("")
         loadTaskList();
+        loadTaskTable();
       })
   })
 }

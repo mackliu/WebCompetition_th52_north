@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2022-02-28 13:50:44
+-- 產生時間： 2022-02-28 15:53:03
 -- 伺服器版本： 10.4.22-MariaDB
 -- PHP 版本： 8.1.2
 
@@ -44,12 +44,14 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `user_id`, `date`, `name`, `status`, `priority`, `start`, `end`, `description`) VALUES
-(3, 2, '2022-02-28', '完成互動視窗功能', 3, 3, '07:00', '08:00', '完成互動視窗可以呼叫及執行功能'),
-(4, 2, '2022-02-28', '編輯工作項目功能測試', 2, 2, '05:00', '08:00', '功能測試:\n測試編輯功能是否正常運作'),
-(5, 2, '2022-02-28', '工作三', 1, 2, '05:00', '09:00', 'dsfasdfs\nsdfasdf\nsdfasdf'),
-(6, 2, '2022-02-28', '工作四', 2, 1, '07:00', '11:00', 'dfasdfsa\nsdfasdf'),
-(7, 2, '2022-02-28', '工作五', 1, 1, '12:00', '15:00', 'dfasdfs\nsdfasdfsdaf'),
-(8, 2, '2022-02-28', '工作七', 2, 1, '03:00', '16:00', 'fdsaffsdafsaf');
+(3, 2, '2022-02-28', '完成互動視窗功能', 3, 3, '07', '08', '完成互動視窗可以呼叫及執行功能'),
+(4, 2, '2022-02-28', '編輯工作項目功能測試', 2, 2, '05', '08', '功能測試:\n測試編輯功能是否正常運作'),
+(5, 2, '2022-02-28', '工作三', 1, 2, '05', '09', 'dsfasdfs\nsdfasdf\nsdfasdf'),
+(6, 2, '2022-02-28', '工作四', 2, 1, '07', '11', 'dfasdfsa\nsdfasdf'),
+(7, 2, '2022-02-28', '工作五', 1, 1, '12', '15', 'dfasdfs\nsdfasdfsdaf'),
+(8, 2, '2022-02-28', '工作11', 3, 1, '04', '16', 'fdsaffsdafsaf'),
+(9, 2, '2022-02-28', '工作九', 1, 1, '18', '23', 'dfasfsdafsad\nsdfasdf'),
+(10, 2, '2022-02-28', '工作88', 1, 1, '01', '04', 'fdsfasdfsadf');
 
 -- --------------------------------------------------------
 
@@ -116,7 +118,7 @@ ALTER TABLE `user_login`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `user`

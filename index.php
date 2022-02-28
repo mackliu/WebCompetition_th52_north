@@ -16,13 +16,28 @@ if(!isset($_SESSION['login'])){
     <link rel="stylesheet" href="./css/bootstrap.css">
     <link rel="stylesheet" href="./css/fontawesome.css">
     <script src="./js/jquery-3.6.0.min.js"></script>
+    <style>
+        .icons .fas{
+            color:#666;
+        }
+        .icons .fas.active{
+            color:blue;
+        }
 
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>TODO 工作表</h1>
-        <button class='btn btn-success m-2 p-2' onclick="addTask()">新增工作</button>
-        <div id="taskList"></div>
+
+        <div class="funs d-flex justify-content-between align-items-center">
+            <button class='btn btn-success m-2 p-2' onclick="addTask()">新增工作</button>
+            <div class="icons">
+                <i class="fas fa-list fa-2x" data-mode="list"></i>&nbsp;&nbsp;
+                <i class="fas fa-table fa-2x active" data-mode="table"></i>
+            </div>
+        </div>
+        <div id="taskList" style="display:none"></div>
         <div id="taskTable"></div>     
     </div>
 
@@ -31,7 +46,23 @@ if(!isset($_SESSION['login'])){
 </body>
 </html>
 <script>
-//loadTaskList()
+//模式切換
+$(".icons .fas").on("click",function(){
+    let mode=$(this).data('mode')
+    $(".icons .fas").removeClass("active")
+    $(this).addClass("active")
+    switch(mode){
+        case 'list':
+            $("#taskList").show();
+            $("#taskTable").hide();
+        break;
+        case 'table':
+            $("#taskTable").show();
+            $("#taskList").hide();
+        break;
+    }
+})
+loadTaskList()
 loadTaskTable()
 function loadTaskTable(){
     $("#taskTable").load("api/task_table.php")

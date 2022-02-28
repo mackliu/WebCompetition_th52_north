@@ -32,9 +32,9 @@
         <label for="start" class="col-md-2 px-0">開始時間：</label>
           <select name="start" id="start" class="col-md-3">
           <?php
-            for($i=1;$i<=24;$i++){
+            for($i=0;$i<=24;$i++){
               $zero=sprintf("%02d",$i);
-              echo "<option value='$zero:00'>$zero:00</option>";
+              echo "<option value='$zero'>$zero:00</option>";
             }
           ?>
           </select>
@@ -42,9 +42,9 @@
           <label for="end" class="col-md-2 px-0">結束時間：</label>
           <select name="end" id="end" class="col-md-3">
           <?php
-            for($i=1;$i<=24;$i++){
+            for($i=0;$i<=24;$i++){
               $zero=sprintf("%02d",$i);
-              echo "<option value='$zero:00'>$zero:00</option>";
+              echo "<option value='$zero'>$zero:00</option>";
             }
           ?>
           </select>
@@ -74,12 +74,12 @@ function submit(){
     description:$("#description").val(),
   }
   $.post("api/add_task.php",data,(res)=>{
-    console.log(res)
-      alert("工作新增完成");
       $("#addTask").modal("hide")
       $("#addTask").on("hidden.bs.modal",()=>{
         $("#addTask").modal("dispose")
         $("#modal").html("")
+        loadTaskList()
+        loadTaskTable()
       })
   })
 }
