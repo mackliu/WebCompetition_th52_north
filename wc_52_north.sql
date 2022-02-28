@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2022-02-27 06:30:17
+-- 產生時間： 2022-02-28 13:50:44
 -- 伺服器版本： 10.4.22-MariaDB
 -- PHP 版本： 8.1.2
 
@@ -20,6 +20,36 @@ SET time_zone = "+00:00";
 --
 -- 資料庫: `wc_52_north`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `task`
+--
+
+CREATE TABLE `task` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `priority` tinyint(1) NOT NULL,
+  `start` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `end` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 傾印資料表的資料 `task`
+--
+
+INSERT INTO `task` (`id`, `user_id`, `date`, `name`, `status`, `priority`, `start`, `end`, `description`) VALUES
+(3, 2, '2022-02-28', '完成互動視窗功能', 3, 3, '07:00', '08:00', '完成互動視窗可以呼叫及執行功能'),
+(4, 2, '2022-02-28', '編輯工作項目功能測試', 2, 2, '05:00', '08:00', '功能測試:\n測試編輯功能是否正常運作'),
+(5, 2, '2022-02-28', '工作三', 1, 2, '05:00', '09:00', 'dsfasdfs\nsdfasdf\nsdfasdf'),
+(6, 2, '2022-02-28', '工作四', 2, 1, '07:00', '11:00', 'dfasdfsa\nsdfasdf'),
+(7, 2, '2022-02-28', '工作五', 1, 1, '12:00', '15:00', 'dfasdfs\nsdfasdfsdaf'),
+(8, 2, '2022-02-28', '工作七', 2, 1, '03:00', '16:00', 'fdsaffsdafsaf');
 
 -- --------------------------------------------------------
 
@@ -42,9 +72,29 @@ INSERT INTO `user` (`id`, `acc`, `pw`, `pr`) VALUES
 (1, 'admin', '1234', '1234'),
 (2, 'abcd', '1234', '1234');
 
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `user_login`
+--
+
+CREATE TABLE `user_login` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `action` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `code` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- 已傾印資料表的索引
 --
+
+--
+-- 資料表索引 `task`
+--
+ALTER TABLE `task`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 資料表索引 `user`
@@ -53,14 +103,32 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 資料表索引 `user_login`
+--
+ALTER TABLE `user_login`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- 在傾印的資料表使用自動遞增(AUTO_INCREMENT)
 --
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `task`
+--
+ALTER TABLE `task`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `user_login`
+--
+ALTER TABLE `user_login`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
