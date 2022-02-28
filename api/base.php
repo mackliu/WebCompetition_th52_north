@@ -14,6 +14,32 @@ class DB{
         $this->pdo=new PDO($this->dsn,$this->user,$this->pw);
     }
 
+    public function status($code){
+        switch($code){
+            case 1:
+                return "未處理";  
+            break;
+            case 2:
+                return "處理中";
+            break;
+            case 3:
+                return "已完成";
+            break;
+        }
+    }
+    public function priority($code){
+        switch($code){
+            case 1:
+                return "普通件";  
+            break;
+            case 2:
+                return "速件";
+            break;
+            case 3:
+                return "最速件";
+            break;
+        }
+    }
     //查詢單一筆資料
     public function find($id){
         $sql="SELECT * FROM $this->table WHERE ";
@@ -149,7 +175,7 @@ function to($url){
     header("location:".$url);
 }
 
-$User=new DB("user")
-
+$User=new DB("user");
+$Task=new DB("task");
 
 ?>
