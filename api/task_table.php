@@ -51,7 +51,7 @@ foreach($tasks as $task){
             //間隔兩小時加一條底線
             $bottom=($i%2==1)?'border-bottom':'';
         ?>
-        <div data-hours="<?=$hour;?>" class="d-100 border-right <?=$bottom;?> border-gray position-relative" style="height:3.25vh" onclick="addTask()">
+        <div data-hours="<?=$hour;?>" class="time-line d-100 border-right <?=$bottom;?> border-gray position-relative" style="height:3.25vh" onclick="addTask()">
         <?php
             //判斷此時間段有沒有工作項目在
             if(in_array($hour,$hoursKey)){
@@ -91,4 +91,40 @@ $(".task-block").on("click",function(e){
     editTask(id)
 })
 
+//拖曳事件發生時的資料傳遞物件
+let dragInfo={
+    block:'',
+    position:'',
+    hours:'',
+};
+
+//工作項目的拖曳事件監聽
+$(".task-block").on({
+    'dragstart':(e)=>{
+
+    },
+    'drag':(e)=>{
+
+    },
+    'dragend':(e)=>{
+
+    }
+})
+
+//每小時時間線的拖曳監聽事件
+$(".time-line").on({
+    'dragenter':(e)=>{
+        e.preventDefault()
+        e.stopPropagation()
+
+    },
+    'drageover':(e)=>{
+        e.preventDefault()
+        e.stopPropagation()
+
+    },
+    'drop':(e)=>{
+
+    }
+})
 </script>
