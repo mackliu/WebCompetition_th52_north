@@ -82,6 +82,7 @@ foreach($tasks as $task){
         }
         ?>
     </div>
+
 </div>
 <script>
 $(".task-block").on("click",function(e){
@@ -106,16 +107,21 @@ $(".task-block").on({
             y:dragInfo.position.top-e.pageY
         }
         dragInfo.duration=Math.abs(eval($(e.currentTarget).children('div').eq(0).text()))
-        console.log(dragInfo)
+        //建立一個空白的圖形資源
+        img = new Image();
+        //把空白圖形資源寫入到拖曳事件中的預設替代圖片中，讓下方的元素資訊可以顯示出來
+        e.originalEvent.dataTransfer.setDragImage(img,0,0)
+        
     },
     'drag':(e)=>{
-
+       //let dom=document.getElementsByClassName('task-block')[$(dragInfo.block).index()]
+        //console.log(e.dataTransfer)
        // 根據滑鼠當前位置來決定工作區塊的新位置
         let pos={ 
                   top:e.pageY+dragInfo.shift.y,
                   left:e.pageX+dragInfo.shift.x
                 }
-
+        dragInfo.position=pos        
         //先隱藏工作區塊來讓下方的時間區塊成為可見的狀態                
         $(dragInfo.block).hide()                  
 
@@ -124,7 +130,6 @@ $(".task-block").on({
 
         //判斷這個區塊是不是時間區塊
         if($(timeLine).hasClass("time-line")){
-
             //如果是時間區塊則把這個時間區塊的小時更新到dragInfo中
             dragInfo.hours=$(timeLine).data("hours")
         }
@@ -132,26 +137,36 @@ $(".task-block").on({
         //重新顯示工作區塊
         $(dragInfo.block).show()
 
-        //計算工作區塊移動後的新結束小時
+        //計算工作區塊移動後的新結束時間
         dragInfo.end=parseInt(dragInfo.hours)+dragInfo.duration
 
-        //更新工作區塊的時間資訊
-        //console.log(`${dragInfo.hours}-${end}`)
-
-        $(e.currentTarget).find('.job-duration').text(`${dragInfo.hours}-${dragInfo.end}`)
-
-        //console.log(timeLine)
-       //console.log(`${dragInfo.hours}-${end}`)
+        //更新工作區塊中的時間資訊
+        $(dragInfo.block).find('.job-duration').text(`${dragInfo.hours}-${dragInfo.end}`)
 
        //更新區塊在畫面上的位置
-        $(dragInfo.block).offset({
-            top:e.pageY+dragInfo.shift.y,
-            left:e.pageX+dragInfo.shift.x
-        })
+        $(dragInfo.block).offset(pos)
 
     },
     'dragend':(e)=>{
-        console.log('end')
+        //先隱藏工作區塊來讓下方的時間區塊成為可見的狀態                
+        $(dragInfo.block).hide()                  
+
+        //利用document.elementFromPoint來找到目前區塊上緣中心的位置屬於那個時間區塊
+        let timeLine=document.elementFromPoint((dragInfo.position.left+75),dragInfo.position.top)
+
+        //判斷這個區塊是不是時間區塊
+        if($(timeLine).hasClass("time-line")){
+            //如果是時間區塊
+            //1.先把區塊的top屬性設為0，用來對齊每個小時的區塊上緣
+            $(dragInfo.block).css({top:0})
+
+            //2.把這個工作區塊放到這個時間區塊中
+            $(dragInfo.block).appendTo(timeLine)
+            
+        }
+
+        //重新顯示工作區塊
+        $(dragInfo.block).show()
     }
 })
 
