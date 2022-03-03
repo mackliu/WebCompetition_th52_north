@@ -5,7 +5,7 @@ session_start();
 class DB{
     protected $dsn="mysql:host=localhost;charset=utf8;dbname=wc_52_north";
     protected $user="root";
-    protected $pw='';
+    protected $pw='mack1007';
     protected $pdo;
     protected $table;
 

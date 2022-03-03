@@ -23,6 +23,7 @@ foreach($tasks as $task){
         $hoursTasks[sprintf("%02d",($start+$i))][]=$task['id'];
     }
 }
+//dd($hoursTasks);
 ?>
 <div class="task-table-head">
     <div class="d-flex bg-primary">
@@ -51,7 +52,7 @@ foreach($tasks as $task){
             //間隔兩小時加一條底線
             $bottom=($i%2==1)?'border-bottom':'';
         ?>
-        <div data-hours="<?=$hour;?>" class="time-line d-100 border-right <?=$bottom;?> border-gray position-relative" style="height:3.25vh" onclick="addTask()">
+        <div data-hours="<?=$hour;?>" class="time-line d-100 border-right <?=$bottom;?> border-gray position-relative" style="height:3.25vh">
         <?php
             //判斷此時間段有沒有工作項目在
             if(in_array($hour,$hoursKey)){
@@ -67,7 +68,7 @@ foreach($tasks as $task){
                     $left=array_search($task['id'],$hoursTasks[$task['start']])*150;
 
                     //在畫面上建立工作區塊，需加入可拖曳的設定
-                    echo "<div draggable='true' class='task-block border bg-success text-light position-absolute overflow-hidden' style='z-index:10;left:{$left}px;width:{$width};height:{$height}vh' data-id='{$task['id']}'>";
+                    echo "<div draggable='true' class='task-block border bg-success text-light position-absolute overflow-hidden' style='z-index:10;left:{$left}px;width:{$width};height:{$height}vh' data-id='{$task['id']}' data-start='{$task['start']}'>";
                     echo "  <div>{$task['start']}-{$task['end']}</div>";
                     echo "  <div>{$task['name']}</div>";
                     echo "  <div>{$Task->status($task['status'])}</div>";
@@ -85,25 +86,38 @@ foreach($tasks as $task){
 <script>
 $(".task-block").on("click",function(e){
     let id=$(this).data("id")
-    
     //暫停事件傳遞，避免觸發新增工作功能
     e.stopPropagation()
     editTask(id)
 })
+$(".time-line").on("click",function(e){
+    addTask();
+})
 
-//拖曳事件發生時的資料傳遞物件
-let dragInfo={
-    block:'',
-    position:'',
-    hours:'',
-};
 
 //工作項目的拖曳事件監聽
 $(".task-block").on({
     'dragstart':(e)=>{
-
+        dragInfo.block=$(e.currentTarget);
+        dragInfo.hours=$(e.currentTarget).data("start")
+        dragInfo.position=$(e.currentTarget).offset()
+        dragInfo.gap={
+            x:dragInfo.position.left-e.pageX,
+            y:dragInfo.position.top-e.pageY
+        }
+        console.log(dragInfo)
     },
     'drag':(e)=>{
+        let duration=Math.abs(eval($(e.currentTarget).children('div').eq(0).text()))
+        let end=parseInt(parseInt(dragInfo.hours)+duration)
+        $(dragInfo.block).children('div').eq(0).text(`${dragInfo.hours}-${end}`)
+       // let position=$(e.target).offset()
+
+       //console.log(`${dragInfo.hours}-${end}`)
+        $(dragInfo.block).offset({
+            top:e.pageY+dragInfo.gap.y,
+            left:e.pageX+dragInfo.gap.x
+        })
 
     },
     'dragend':(e)=>{
@@ -114,14 +128,14 @@ $(".task-block").on({
 //每小時時間線的拖曳監聽事件
 $(".time-line").on({
     'dragenter':(e)=>{
-        e.preventDefault()
-        e.stopPropagation()
-
+        //e.stopPropagation()
+        dragInfo.hours=$(e.currentTarget).data('hours')
+      // console.log($(e.currentTarget).offset())
     },
-    'drageover':(e)=>{
-        e.preventDefault()
-        e.stopPropagation()
+    'dragover':(e)=>{
 
+       e.preventDefault()
+       console.log($(e.currentTarget).data('hours'))
     },
     'drop':(e)=>{
 

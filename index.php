@@ -62,6 +62,14 @@ $(".icons .fas").on("click",function(){
         break;
     }
 })
+//拖曳事件發生時的資料傳遞物件
+let dragInfo={
+    block:'',
+    position:'',
+    hours:'',
+    gap:''
+};
+
 loadTaskList()
 loadTaskTable()
 function loadTaskTable(){
