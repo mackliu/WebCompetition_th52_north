@@ -20,9 +20,21 @@ foreach($tasks as $task){
     $end=$task['end'];
     $duration=$end-$start;
     for($i=0;$i<$duration;$i++){
-        $hoursTasks[sprintf("%02d",($start+$i))][]=$task['id'];
+        if(isset($hoursTasks[sprintf("%02d",($start+$i-1))])){
+            $prev=array_search($task['id'],$hoursTasks[sprintf("%02d",($start+$i-1))]);
+            if($prev!=false){
+                $hoursTasks[sprintf("%02d",($start+$i))][$prev]=$task['id'];
+            }else{
+                $hoursTasks[sprintf("%02d",($start+$i))][]=$task['id'];
+            }
+        }else{
+            $hoursTasks[sprintf("%02d",($start+$i))][]=$task['id'];
+        }
+
     }
 }
+
+
 //dd($hoursTasks);
 ?>
 <div class="task-table-head">
