@@ -66,8 +66,10 @@ $(".icons .fas").on("click",function(){
 let dragInfo={
     block:'',
     position:'',
+    duration:'',
     hours:'',
-    gap:''
+    shift:'',
+    end:''
 };
 
 loadTaskList()

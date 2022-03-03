@@ -69,10 +69,10 @@ foreach($tasks as $task){
 
                     //在畫面上建立工作區塊，需加入可拖曳的設定
                     echo "<div draggable='true' class='task-block border bg-success text-light position-absolute overflow-hidden' style='z-index:10;left:{$left}px;width:{$width};height:{$height}vh' data-id='{$task['id']}' data-start='{$task['start']}'>";
-                    echo "  <div>{$task['start']}-{$task['end']}</div>";
-                    echo "  <div>{$task['name']}</div>";
-                    echo "  <div>{$Task->status($task['status'])}</div>";
-                    echo "  <div>{$Task->priority($task['priority'])}</div>";
+                    echo "  <div class='job-duration'>{$task['start']}-{$task['end']}</div>";
+                    echo "  <div class='job-name'>{$task['name']}</div>";
+                    echo "  <div class='job-status'>{$Task->status($task['status'])}</div>";
+                    echo "  <div class='job-priority'>{$Task->priority($task['priority'])}</div>";
                     echo "</div>";
                 }
             }
@@ -101,27 +101,57 @@ $(".task-block").on({
         dragInfo.block=$(e.currentTarget);
         dragInfo.hours=$(e.currentTarget).data("start")
         dragInfo.position=$(e.currentTarget).offset()
-        dragInfo.gap={
+        dragInfo.shift={
             x:dragInfo.position.left-e.pageX,
             y:dragInfo.position.top-e.pageY
         }
+        dragInfo.duration=Math.abs(eval($(e.currentTarget).children('div').eq(0).text()))
         console.log(dragInfo)
     },
     'drag':(e)=>{
-        let duration=Math.abs(eval($(e.currentTarget).children('div').eq(0).text()))
-        let end=parseInt(parseInt(dragInfo.hours)+duration)
-        $(dragInfo.block).children('div').eq(0).text(`${dragInfo.hours}-${end}`)
-       // let position=$(e.target).offset()
 
+       // 根據滑鼠當前位置來決定工作區塊的新位置
+        let pos={ 
+                  top:e.pageY+dragInfo.shift.y,
+                  left:e.pageX+dragInfo.shift.x
+                }
+
+        //先隱藏工作區塊來讓下方的時間區塊成為可見的狀態                
+        $(dragInfo.block).hide()                  
+
+        //利用document.elementFromPoint來找到目前區塊上緣中心的位置屬於那個時間區塊
+        let timeLine=document.elementFromPoint((pos.left+75),pos.top)
+
+        //判斷這個區塊是不是時間區塊
+        if($(timeLine).hasClass("time-line")){
+
+            //如果是時間區塊則把這個時間區塊的小時更新到dragInfo中
+            dragInfo.hours=$(timeLine).data("hours")
+        }
+
+        //重新顯示工作區塊
+        $(dragInfo.block).show()
+
+        //計算工作區塊移動後的新結束小時
+        dragInfo.end=parseInt(dragInfo.hours)+dragInfo.duration
+
+        //更新工作區塊的時間資訊
+        //console.log(`${dragInfo.hours}-${end}`)
+
+        $(e.currentTarget).find('.job-duration').text(`${dragInfo.hours}-${dragInfo.end}`)
+
+        //console.log(timeLine)
        //console.log(`${dragInfo.hours}-${end}`)
+
+       //更新區塊在畫面上的位置
         $(dragInfo.block).offset({
-            top:e.pageY+dragInfo.gap.y,
-            left:e.pageX+dragInfo.gap.x
+            top:e.pageY+dragInfo.shift.y,
+            left:e.pageX+dragInfo.shift.x
         })
 
     },
     'dragend':(e)=>{
-
+        console.log('end')
     }
 })
 
@@ -129,13 +159,12 @@ $(".task-block").on({
 $(".time-line").on({
     'dragenter':(e)=>{
         //e.stopPropagation()
-        dragInfo.hours=$(e.currentTarget).data('hours')
+        e.preventDefault()
+       
       // console.log($(e.currentTarget).offset())
     },
     'dragover':(e)=>{
-
        e.preventDefault()
-       console.log($(e.currentTarget).data('hours'))
     },
     'drop':(e)=>{
 
