@@ -65,9 +65,10 @@ $(".icons .fas").on("click",function(){
 //拖曳事件發生時的資料傳遞物件
 let dragInfo={
     block:'',
+    id:'',
     position:'',
     duration:'',
-    hours:'',
+    start:'',
     shift:'',
     end:''
 };
